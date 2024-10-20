@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  usuario_id Int       @id @default(autoincrement())
+  correo     String    @unique @db.VarChar(255)
+  nombre     String    @db.VarChar(255)
+  apellido   String?   @db.VarChar(255)
+  fecha_naci DateTime? @db.Date
+  sexo       String?   @db.VarChar(20)
+  contrasena String    @map("contraseña") @db.VarChar(255)
+  direccion  String?   @db.VarChar(255)
+  album      album[]
+
+  @@map("usuario")
+}
+
+model album {
+  album_id   Int       @id @default(autoincrement())
+  titulo_a   String    @db.VarChar(255)
+  fecha_a    DateTime  @default(now()) @db.Date
+  usuario_id Int
+  usuario    User      @relation(fields: [usuario_id], references: [usuario_id], onUpdate: Restrict, map: "usuario_fk")
+  memoria    memoria[]
+
+  @@index([usuario_id], map: "usuario_fk")
+}
+
+model memoria {
+  memoria_id  Int      @id @default(autoincrement())
+  foto        String   @db.VarChar(255)
+  titulo_m    String   @db.VarChar(255)
+  descripcion String?  @db.VarChar(255)
+  fecha_m     DateTime @default(now()) @db.Date
+  ubicacion   String   @db.VarChar(255)
+  album_id    Int
+  album       album    @relation(fields: [album_id], references: [album_id], onUpdate: Restrict, map: "album_fk")
+
+  @@index([album_id], map: "album_fk")
+}
