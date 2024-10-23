@@ -4,7 +4,7 @@
   "description": "Remipics server apis back",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "node dist/src/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "prisma:generate": "npx prisma generate",
