@@ -6,14 +6,17 @@
   "scripts": {
     "start": "node dist/src/index.js",
     "dev": "nodemon src/index.ts",
-    "build": "tsc",
+    "build": "tsc && npm run prisma:migrate && npm run prisma:seed:user",
     "prisma:generate": "npx prisma generate",
-    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:migrate": "npm run prisma:clean && npm run prisma:generate && npx prisma migrate dev",
+    "prisma:clean": "ts-node prisma/clean-db.ts",
+    "prisma:seed:user": "ts-node ./seeds/users.seeds.ts",
     "test:prisma": "ts-node test/prisma.test.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^9.0.3",
     "@prisma/client": "^5.21.1",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
