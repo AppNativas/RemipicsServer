@@ -5,12 +5,12 @@ const prisma = new PrismaClient();
 
 async function main() {
   const users = Array.from({ length: 10 }).map((__, index) => ({
-    correo: index == 0 ? "remipic@gmail.co" : faker.internet.email(),
-    nombre: faker.person.firstName(),
-    apellido: faker.person.lastName(),
+    correo: index == 0 ? "remipic@gmail.co" : faker.internet.email().substring(0, 255),
+    nombre: faker.person.firstName().substring(0, 255),
+    apellido: faker.person.lastName().substring(0, 255),
     fecha_naci: faker.date.past(),
-    sexo: faker.person.gender(),
-    contrasena: index == 0 ? "12345" : faker.internet.password(),
+    sexo: faker.person.gender().substring(0, 20),
+    contrasena: index == 0 ? "12345" : faker.internet.password().substring(0, 255),
     direccion: faker.location.streetAddress().substring(0, 255),
   }));
 
