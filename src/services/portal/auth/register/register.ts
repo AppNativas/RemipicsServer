@@ -1,18 +1,31 @@
 import { Request, Response, Router } from "express";
-import { searchUserLogin } from "../../../../clients/portal/auth/login/login";
 import {
   createErrorResponse,
   createSuccessResponse,
 } from "../../../utils/create-responses";
 import { ApiResponse } from "../../../types/responses";
+import {
+  registerUser,
+  validateUserExist,
+} from "../../../../clients/portal/auth/register/register";
 
-const routeLogin = Router();
+const routeRegister = Router();
 
-routeLogin.post("/login", async (req: Request, res: Response) => {
+routeRegister.post("/register", async (req: Request, res: Response) => {
   try {
-    console.log("req.body", req.body);
-    const { email, password } = req.body;
-    const data = await searchUserLogin(email, password);
+    const { correo } = req.body;
+    console.log("correo------------", correo);
+    const existUser = await validateUserExist(correo);
+
+    if (!existUser) throw new Error("User already exists");
+
+    const isCreateUser = await registerUser(req.body);
+    if (!isCreateUser) throw new Error("User not created");
+
+    const data = {
+      message: "User created successfully",
+    };
+
     const response: ApiResponse<typeof data> = createSuccessResponse(data);
     res.json(response);
   } catch (error) {
@@ -28,4 +41,4 @@ routeLogin.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-export default routeLogin;
+export default routeRegister;
